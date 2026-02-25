@@ -93,13 +93,16 @@ contract Lending {
         uint256 secondsElapsed = block.timestamp - loan.borrowedAt;
 
         //The Interest on the principal amount taken.
-        uint256 interest = (loan.principal * loan.interestRate * secondsElapsed)/ (365 days * 100);
+        // Perform multiplication first to maintain precision
+        uint256 numerator = loan.principal * loan.interestRate * secondsElapsed;
+        uint256 denominator = 365 days * 100;
+        uint256 interest = numerator / denominator;
 
         //Total amount to repay
         uint256 totalamt = loan.principal + interest;
 
         // Requirement: Repayment must cover exactly principal + accrued interest
-        require(msg.value == totalamt, "Incorrect repayment amount");
+        require(msg.value >= totalamt, "Incorrect repayment amount");
         
 
         // IMPORTANT: Add the interest to the global principal so lenders can withdraw it proportionally
@@ -108,6 +111,13 @@ contract Lending {
         //updating the loan contract
         hasActiveLoan[msg.sender] = false;
         loan.repaid = true;
+
+        // 4. REFUND: If the user sent too much, send the change back immediately
+        uint256 refund = msg.value - totalamt;
+        if (refund > 0) {
+            (bool success, ) = payable(msg.sender).call{value: refund}("");
+            require(success, "Refund failed");
+        }
 
         emit Repaid(msg.sender, totalamt, interest);
     }
@@ -143,5 +153,12 @@ contract Lending {
         require(hasActiveLoan[borrower],"You Currently dont have any Active Loans to View.");
         Loan storage loan = activeLoans[borrower];
         return loan;
+    }
+
+    function calculateCurrentOwed(address borrower) public view returns (uint256) {
+    Loan storage loan = activeLoans[borrower];
+    uint256 secondsElapsed = block.timestamp - loan.borrowedAt;
+    uint256 interest = (loan.principal * loan.interestRate * secondsElapsed) / (365 days * 100);
+    return loan.principal + interest;
     }
 }

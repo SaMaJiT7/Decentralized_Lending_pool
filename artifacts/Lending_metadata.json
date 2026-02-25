@@ -213,6 +213,25 @@
 						"type": "address"
 					}
 				],
+				"name": "calculateCurrentOwed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					}
+				],
 				"name": "checkDefault",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -389,11 +408,11 @@
 	},
 	"sources": {
 		"Lending_pool/Loan.sol": {
-			"keccak256": "0xfa439a58478a0049c59fe37c107925c1d68644c67a257c3197f9e0e97e32c9a3",
+			"keccak256": "0xaf63e49e8f3213bd34bb049e86e9035fb92e4598f871bfadd1534582481eee61",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://cb06056e4613b395c8711fac32725c1ebcdb2008581cbf26a79ee07a53dbbca3",
-				"dweb:/ipfs/QmTNjEk2rGB2bcVtLXws3Q26H1eSVXb7nTWtRHZBXAVAxu"
+				"bzz-raw://f47805906b224d735a23e25cc2eb1a2fd50f0082f5400f7ea24440850d29d447",
+				"dweb:/ipfs/QmWhgWvyJANm9UjosG52XyPVh1VNfUYiZSrzKVw1V7buRW"
 			]
 		}
 	},
